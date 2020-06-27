@@ -112,12 +112,12 @@ describe('Gilded Rose', () => {
 
     describe('When called with the conjured item: Conjured Mana Cake', () => {
 
-      // it('Should degrade twice as fast as regular items', () => {
-      //   items = [ new Item('Conjured Mana Cake', 3, 6)]
-      //   update_quality();
-      //   expect(items[0].sell_in).toEqual(2);
-      //   expect(items[0].quality).toEqual(4);
-      // });
+      it('Should degrade twice as fast as regular items', () => {
+        items = [ new Item('Conjured Mana Cake', 3, 6)]
+        update_quality();
+        expect(items[0].sell_in).toEqual(2);
+        expect(items[0].quality).toEqual(4);
+      });
 
     });
 

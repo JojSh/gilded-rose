@@ -12,6 +12,7 @@ const specialStock = {
   'Aged Brie': item => ageBrie(item),
   'Sulfuras, Hand of Ragnaros': () => {},
   'Backstage passes to a TAFKAL80ETC concert': item => ageConcertTickets(item),
+  'Conjured Mana Cake': item => ageRegular(item, true),
 }
 
 function improveOnce(item) {
@@ -21,7 +22,6 @@ function improveOnce(item) {
 function degrade(item) {
   degradeOnce(item)
   if (item.sell_in <= 0) degradeOnce(item)
-  decrementSellIn(item)
 }
 
 function degradeOnce(item) {
@@ -34,6 +34,12 @@ function decrementSellIn(item) {
 
 function setQualityToZero(item) {
   item.quality = 0
+}
+
+function ageRegular(item, conjured) {
+  degrade(item)
+  if (conjured) degradeOnce(item)
+  decrementSellIn(item)
 }
 
 function ageBrie(item) {
@@ -52,6 +58,6 @@ function ageConcertTickets(item) {
 function update_quality() {
   items.forEach(item => {
     const { name } = item;
-    !specialStock[name] ? degrade(item) : specialStock[name](item);
+    !specialStock[name] ? ageRegular(item) : specialStock[name](item);
   })
 }
