@@ -6,8 +6,6 @@ class Item {
   }
 }
 
-let items = []
-
 const specialStock = {
   'Aged Brie': item => ageBrie(item),
   'Sulfuras, Hand of Ragnaros': () => {},
@@ -55,7 +53,7 @@ function ageConcertTickets(item) {
   decrementSellIn(item)
 }
 
-function update_quality() {
+function update_quality(items) {
   items.forEach(item => {
     const { name } = item;
     !specialStock[name] ? ageRegular(item) : specialStock[name](item);
