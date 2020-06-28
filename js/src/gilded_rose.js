@@ -59,3 +59,8 @@ function update_quality(items) {
     !specialStock[name] ? ageRegular(item) : specialStock[name](item);
   })
 }
+
+module.exports = {
+  Item: Item,
+  update_quality: update_quality
+};
