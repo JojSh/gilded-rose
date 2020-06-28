@@ -6,7 +6,13 @@ function Item(name, sell_in, quality) {
 
 var items = [];
 
-const specialStock = {
+const MAX_QUALITY = 50
+const MIN_QUALITY = 0
+
+const FEW_DAYS_TO_CONCERT = 10
+const FEWER_DAYS_TO_CONCERT = 5
+
+const specialStockAgers = {
   'Aged Brie': item => ageBrie(item),
   'Sulfuras, Hand of Ragnaros': () => {},
   'Backstage passes to a TAFKAL80ETC concert': item => ageConcertTickets(item),
@@ -14,24 +20,24 @@ const specialStock = {
 }
 
 function improveOnce(item) {
-  if (item.quality < 50) item.quality = item.quality + 1;
+  if (item.quality < MAX_QUALITY) item.quality = item.quality + 1;
 }
 
 function degrade(item) {
   degradeOnce(item);
-  if (item.sell_in <= 0) degradeOnce(item);
+  if (item.sell_in <= MIN_QUALITY) degradeOnce(item);
 }
 
 function degradeOnce(item) {
-  if (item.quality > 0) item.quality = item.quality - 1;
+  if (item.quality > MIN_QUALITY) item.quality = item.quality - 1;
 }
 
 function decrementSellIn(item) {
   item.sell_in = item.sell_in - 1;
 }
 
-function setQualityToZero(item) {
-  item.quality = 0;
+function setQualityToMin(item) {
+  item.quality = MIN_QUALITY;
 }
 
 function ageRegular(item, conjured) {
@@ -47,22 +53,15 @@ function ageBrie(item) {
 
 function ageConcertTickets(item) {
   improveOnce(item);
-  if (item.sell_in <= 10) improveOnce(item);
-  if (item.sell_in <= 5) improveOnce(item);
-  if (item.sell_in <= 0) setQualityToZero(item);
+  if (item.sell_in <= FEW_DAYS_TO_CONCERT) improveOnce(item);
+  if (item.sell_in <= FEWER_DAYS_TO_CONCERT) improveOnce(item);
+  if (item.sell_in <= MIN_QUALITY) setQualityToMin(item);
   decrementSellIn(item);
 }
 
-function update_quality(stock) {
-  const stockList = stock || items;
-  stockList.forEach(item => {
-    const { name } = item;
-    !specialStock[name] ? ageRegular(item) : specialStock[name](item);
+function update_quality() {
+  items.forEach(item => {
+    const ageSpecial = specialStockAgers[item.name];
+    ageSpecial ? ageSpecial(item) : ageRegular(item);
   });
-};
-
-module.exports = {
-  Item: Item,
-  items: items,
-  update_quality: update_quality,
 };
